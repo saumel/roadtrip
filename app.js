@@ -119,50 +119,46 @@
     );
   }
 
-  /* ---------- Map (Google Maps) ---------- */
-  // Called by the Google Maps script once it has loaded (see index.html).
-  window.initMap = function initMap() {
-    const mapEl = document.getElementById("googleMap");
-    if (!mapEl || typeof google === "undefined") return;
+  /* ---------- Map (OpenStreetMap + Leaflet) ---------- */
+  function initMap() {
+    const mapEl = document.getElementById("tripMap");
+    if (!mapEl || typeof L === "undefined") return;
 
-    const map = new google.maps.Map(mapEl, {
-      center: { lat: 34, lng: -78 },
-      zoom: 5,
-      mapTypeControl: true,
-      streetViewControl: false,
-      fullscreenControl: true,
-      gestureHandling: "cooperative",
-    });
+    const map = L.map(mapEl, { scrollWheelZoom: false }).setView([34, -78], 5);
+    L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
+      maxZoom: 19,
+      attribution:
+        '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+    }).addTo(map);
 
-    const bounds = new google.maps.LatLngBounds();
-    const path = [];
-    const info = new google.maps.InfoWindow();
+    const bounds = L.latLngBounds([]);
 
     TRIP.stops.forEach((stop, idx) => {
-      const pos = { lat: stop.coords[0], lng: stop.coords[1] };
-      path.push(pos);
+      const pos = [stop.coords[0], stop.coords[1]];
       bounds.extend(pos);
 
-      const marker = new google.maps.Marker({
-        position: pos,
-        map: map,
-        title: stop.name,
-        label: { text: String(idx + 1), color: "#ffffff", fontWeight: "700", fontSize: "12px" },
+      const icon = L.divIcon({
+        className: "num-pin",
+        html: `<span>${idx + 1}</span>`,
+        iconSize: [28, 28],
+        iconAnchor: [14, 14],
       });
 
-      const gmaps =
-        "https://www.google.com/maps/search/?api=1&query=" + encodeURIComponent(stop.name);
-      marker.addListener("click", () => {
-        info.setContent(
+      const osm =
+        "https://www.openstreetmap.org/?mlat=" + stop.coords[0] +
+        "&mlon=" + stop.coords[1] +
+        "#map=13/" + stop.coords[0] + "/" + stop.coords[1];
+
+      L.marker(pos, { icon: icon, title: stop.name })
+        .addTo(map)
+        .bindPopup(
           `<div class="popup-title">${stop.icon} ${stop.name}</div>
            <div class="popup-sub">${stop.label} · ${stop.date}</div>
-           <a class="popup-link" href="${gmaps}" target="_blank" rel="noopener">Open in Google Maps &rarr;</a>`
+           <a class="popup-link" href="${osm}" target="_blank" rel="noopener">Open in OpenStreetMap &rarr;</a>`
         );
-        info.open({ anchor: marker, map: map });
-      });
     });
 
-    // Route line: follow the real roads using the Directions service.
+    // Route: follow the real roads using the public OSRM routing service.
     // We route through the driving stops only (hotels / home / port),
     // not the in-city activity markers. The trip is split into two legs:
     //   GO  (south): Québec → ... → Miami (PortMiami)
@@ -180,8 +176,6 @@
     const goStops = turnIdx > 0 ? driveStops.slice(0, turnIdx + 1) : driveStops;
     const backStops = turnIdx > 0 ? driveStops.slice(turnIdx + 1) : [];
 
-    const toLatLng = (s) => ({ lat: s.coords[0], lng: s.coords[1] });
-
     const driveSummaryEl = document.getElementById("driveSummary");
     function shorten(name) {
       return name
@@ -194,6 +188,14 @@
         .replace("Philadelphia, PA", "Philadelphia")
         .replace("Québec City", "Québec");
     }
+    function fmtDur(secs) {
+      const h = Math.floor(secs / 3600);
+      const m = Math.round((secs % 3600) / 60);
+      return (h ? h + "h " : "") + m + "m";
+    }
+    function fmtDist(meters) {
+      return Math.round(meters / 1000).toLocaleString() + " km";
+    }
     function addDriveGroup(title, stops, legs, cssClass) {
       if (!driveSummaryEl || !legs || !legs.length) return;
       let totalM = 0;
@@ -202,17 +204,16 @@
       legs.forEach((leg, i) => {
         const a = stops[i];
         const b = stops[i + 1];
-        totalM += leg.distance ? leg.distance.value : 0;
-        totalS += leg.duration ? leg.duration.value : 0;
+        totalM += leg.distance || 0;
+        totalS += leg.duration || 0;
         const dir =
-          "https://www.google.com/maps/dir/?api=1&origin=" +
-          a.coords[0] + "," + a.coords[1] +
-          "&destination=" + b.coords[0] + "," + b.coords[1] +
-          "&travelmode=driving";
+          "https://www.openstreetmap.org/directions?engine=fossgis_osrm_car&route=" +
+          a.coords[0] + "," + a.coords[1] + ";" +
+          b.coords[0] + "," + b.coords[1];
         rows +=
           `<div class="drive-row ${cssClass}">
              <span class="dr-route">${shorten(a.name)} → ${shorten(b.name)}</span>
-             <span class="dr-meta">${leg.duration ? leg.duration.text : ""} · ${leg.distance ? leg.distance.text : ""}</span>
+             <span class="dr-meta">${fmtDur(leg.duration)} · ${fmtDist(leg.distance)}</span>
              <a href="${dir}" target="_blank" rel="noopener">Directions →</a>
            </div>`;
       });
@@ -228,95 +229,58 @@
       driveSummaryEl.appendChild(group);
     }
 
-    function straightLine(stops, color) {
+    function straightLine(stops, color, dashed) {
       if (stops.length < 2) return null;
-      return new google.maps.Polyline({
-        path: stops.map(toLatLng),
-        geodesic: true,
-        strokeColor: color,
-        strokeOpacity: 0.9,
-        strokeWeight: 3,
-        map: map,
-      });
-    }
-
-    function legPolylineOptions(color, dashed, zIndex) {
-      if (dashed) {
-        return {
-          strokeColor: color,
-          strokeOpacity: 0,
-          zIndex: zIndex,
-          icons: [
-            {
-              icon: {
-                path: "M 0,-1 0,1",
-                strokeColor: color,
-                strokeOpacity: 1,
-                strokeWeight: 5,
-                scale: 3,
-              },
-              offset: "0",
-              repeat: "18px",
-            },
-          ],
-        };
-      }
-      return { strokeColor: color, strokeOpacity: 0.9, strokeWeight: 5, zIndex: zIndex };
+      return L.polyline(
+        stops.map((s) => [s.coords[0], s.coords[1]]),
+        { color: color, weight: 4, opacity: 0.9, dashArray: dashed ? "2 12" : null }
+      );
     }
 
     // Creates a toggleable leg (returns an object with setVisible()).
-    function createLeg(stops, color, dashed, zIndex, summaryTitle, summaryClass) {
-      const leg = { renderer: null, fallback: null, visible: true };
+    // Uses OSRM for the real roads; falls back to straight lines if it fails.
+    function createLeg(stops, color, dashed, summaryTitle, summaryClass) {
+      const leg = { layer: L.layerGroup().addTo(map), visible: true };
       leg.setVisible = function (v) {
         leg.visible = v;
-        const tgt = v ? map : null;
-        if (leg.renderer) leg.renderer.setMap(tgt);
-        if (leg.fallback) leg.fallback.setMap(tgt);
+        if (v) leg.layer.addTo(map);
+        else map.removeLayer(leg.layer);
       };
       if (stops.length < 2) return leg;
 
-      if (!google.maps.DirectionsService) {
-        leg.fallback = straightLine(stops, color);
-        return leg;
-      }
+      const coordStr = stops.map((s) => s.coords[1] + "," + s.coords[0]).join(";");
+      const url =
+        "https://router.project-osrm.org/route/v1/driving/" + coordStr +
+        "?overview=full&geometries=geojson&steps=false&annotations=false";
 
-      const service = new google.maps.DirectionsService();
-      leg.renderer = new google.maps.DirectionsRenderer({
-        map: map,
-        suppressMarkers: true, // keep our own numbered markers
-        preserveViewport: true,
-        polylineOptions: legPolylineOptions(color, dashed, zIndex),
-      });
-      service.route(
-        {
-          origin: toLatLng(stops[0]),
-          destination: toLatLng(stops[stops.length - 1]),
-          waypoints: stops.slice(1, -1).map((s) => ({ location: toLatLng(s), stopover: true })),
-          optimizeWaypoints: false,
-          travelMode: google.maps.TravelMode.DRIVING,
-          unitSystem: google.maps.UnitSystem.METRIC,
-        },
-        (result, status) => {
-          if (status === "OK") {
-            leg.renderer.setDirections(result);
-            if (result.routes && result.routes[0]) {
-              addDriveGroup(summaryTitle, stops, result.routes[0].legs, summaryClass);
-            }
+      fetch(url)
+        .then((r) => r.json())
+        .then((data) => {
+          if (data.code === "Ok" && data.routes && data.routes[0]) {
+            const route = data.routes[0];
+            const latlngs = route.geometry.coordinates.map((c) => [c[1], c[0]]);
+            L.polyline(latlngs, {
+              color: color,
+              weight: dashed ? 4 : 5,
+              opacity: 0.9,
+              dashArray: dashed ? "2 12" : null,
+            }).addTo(leg.layer);
+            addDriveGroup(summaryTitle, stops, route.legs, summaryClass);
           } else {
-            console.warn("Directions failed (" + status + "). Using straight lines.");
-            leg.renderer.setMap(null);
-            leg.renderer = null;
-            leg.fallback = straightLine(stops, color);
+            throw new Error(data.code || "OSRM error");
           }
-          if (!leg.visible) leg.setVisible(false);
-        }
-      );
+        })
+        .catch((err) => {
+          console.warn("OSRM routing failed (" + err.message + "). Using straight lines.");
+          const sl = straightLine(stops, color, dashed);
+          if (sl) sl.addTo(leg.layer);
+        });
       return leg;
     }
 
-    // GO solid (underneath), BACK dashed on top so both show where roads overlap.
-    const goLeg = createLeg(goStops, GO_COLOR, false, 1, "🌴 Drive South (go)", "");
-    const backLeg = createLeg(backStops, BACK_COLOR, true, 2, "🏡 Drive Home (back)", "back");
+    // GO solid coral, BACK dashed blue so both show where roads overlap.
+    const goLeg = createLeg(goStops, GO_COLOR, false, "🌴 Drive South (go)", "");
+    const backLeg = createLeg(backStops, BACK_COLOR, true, "🏡 Drive Home (back)", "back");
 
     // Wire the show/hide checkboxes.
     const goCb = document.getElementById("toggleGo");
@@ -324,8 +288,16 @@
     if (goCb) goCb.addEventListener("change", (e) => goLeg.setVisible(e.target.checked));
     if (backCb) backCb.addEventListener("change", (e) => backLeg.setVisible(e.target.checked));
 
-    map.fitBounds(bounds, 48);
-  };
+    if (bounds.isValid()) map.fitBounds(bounds, { padding: [40, 40] });
+    setTimeout(() => map.invalidateSize(), 200);
+  }
+
+  // Leaflet is loaded before this script, so build the map right away.
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", initMap);
+  } else {
+    initMap();
+  }
 
   /* ---------- Stays ---------- */
   const stayGrid = document.getElementById("stayGrid");

@@ -15,6 +15,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
@@ -85,13 +86,13 @@
   <section class="section section-map" id="map">
     <div class="section-head">
       <h2>The Route</h2>
-      <p>Tap any marker to see details and open it in Google Maps.</p>
+      <p>Tap any marker to see details and open it in OpenStreetMap.</p>
     </div>
     <div class="map-legend">
       <label><input type="checkbox" id="toggleGo" checked /><i class="dot go"></i> Heading south (go)</label>
       <label><input type="checkbox" id="toggleBack" checked /><i class="dot back"></i> Heading home (back)</label>
     </div>
-    <div id="googleMap" class="map"></div>
+    <div id="tripMap" class="map"></div>
     <div class="drive-summary" id="driveSummary"></div>
   </section>
 
@@ -151,10 +152,9 @@
     <p class="muted">Québec · Washington · Charleston · Orlando · Miami · Savannah · Philadelphia</p>
   </footer>
 
+  <!-- OpenStreetMap rendering via Leaflet (free, no API key). -->
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <script src="data.js"></script>
   <script src="app.js"></script>
-  <!-- Google Maps JavaScript API. Restrict this key to your domains in Google Cloud Console. -->
-  <script async
-    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCaySybvalnsjxE-Uep2s3LyQmKGF13fOc&callback=initMap&loading=async"></script>
 </body>
 </html>

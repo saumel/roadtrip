@@ -1,5 +1,5 @@
 /* RoadTrip 2026 — Service Worker (offline support) */
-const CACHE = "roadtrip2026-v1";
+const CACHE = "roadtrip2026-v2";
 const ASSETS = [
   "./",
   "index.html",
