@@ -5,6 +5,13 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>RoadTrip 2026 · Québec → Miami → Québec</title>
   <meta name="description" content="A family road trip adventure from Québec to Miami and back, June 23 – July 18, 2026." />
+  <link rel="manifest" href="manifest.json" />
+  <meta name="theme-color" content="#0e8c8c" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="RoadTrip 2026" />
+  <link rel="apple-touch-icon" href="images/family.jpg" />
+  <link rel="icon" href="icon.svg" type="image/svg+xml" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
@@ -24,6 +31,8 @@
       <a href="#itinerary">Itinerary</a>
       <a href="#map">Map</a>
       <a href="#stays">Stays</a>
+      <a href="#packing">Packing</a>
+      <a href="#memories">Memories</a>
       <a href="#calendar">Calendar</a>
     </nav>
     <button class="nav-toggle" id="navToggle" aria-label="Menu">☰</button>
@@ -37,6 +46,8 @@
       <p class="hero-kicker">The Great Family Adventure</p>
       <h1 class="hero-title">2026 RoadTrip</h1>
       <p class="hero-dates">June 23 – July 18, 2026 · 26 days · ~6,500 km</p>
+
+      <div class="today-banner" id="todayBanner" hidden></div>
 
       <div class="countdown" id="countdown" aria-live="polite">
         <div class="cd-box"><span id="cdDays">--</span><small>days</small></div>
@@ -81,6 +92,7 @@
       <label><input type="checkbox" id="toggleBack" checked /><i class="dot back"></i> Heading home (back)</label>
     </div>
     <div id="googleMap" class="map"></div>
+    <div class="drive-summary" id="driveSummary"></div>
   </section>
 
   <!-- STAYS -->
@@ -90,6 +102,35 @@
       <p>Our home base for each leg of the trip.</p>
     </div>
     <div class="stay-grid" id="stayGrid"></div>
+  </section>
+
+  <!-- PACKING -->
+  <section class="section" id="packing">
+    <div class="section-head">
+      <h2>Packing Checklist</h2>
+      <p>Tick things off as you pack — your progress is saved on this device.</p>
+    </div>
+    <div class="pack-progress">
+      <div class="pack-bar"><span id="packBarFill"></span></div>
+      <span id="packCount" class="pack-count">0 / 0 packed</span>
+      <button class="btn btn-ghost btn-sm" id="packReset">Reset</button>
+    </div>
+    <div class="pack-grid" id="packGrid"></div>
+  </section>
+
+  <!-- MEMORIES -->
+  <section class="section" id="memories">
+    <div class="section-head">
+      <h2>Trip Memories</h2>
+      <p>Add photos along the way to build our travel scrapbook. Photos are saved on this device.</p>
+    </div>
+    <div class="mem-toolbar">
+      <select id="memStop" class="mem-select" aria-label="Stop for this photo"></select>
+      <label class="btn btn-primary" for="memInput">📷 Add photo</label>
+      <input type="file" id="memInput" accept="image/*" capture="environment" hidden multiple />
+    </div>
+    <p class="mem-empty" id="memEmpty">No memories yet — add your first photo above! 🌴</p>
+    <div class="mem-grid" id="memGrid"></div>
   </section>
 
   <!-- CALENDAR -->

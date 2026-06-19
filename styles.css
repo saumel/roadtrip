@@ -190,10 +190,59 @@ body {
 .footer { text-align: center; padding: 40px 20px 60px; color: var(--teal-deep); }
 .footer .muted { color: #93a4ab; font-size: .85rem; }
 
+/* TODAY BANNER (hero) */
+.today-banner {
+  display: inline-block; margin: 0 auto 22px; padding: 10px 20px; border-radius: 999px;
+  background: rgba(255,255,255,.16); border: 1px solid rgba(255,255,255,.32);
+  backdrop-filter: blur(8px); color: #fff; font-weight: 600; font-size: .95rem;
+}
+.today-banner b { color: var(--gold); }
+
+/* Timeline "today" highlight */
+.tl-item.today .tl-dot { border-color: var(--coral); box-shadow: 0 0 0 6px rgba(255,107,94,.25); }
+.tl-item.today .tl-card { outline: 2px solid var(--coral); }
+.tl-now { display: inline-block; margin-left: 8px; background: var(--coral); color: #fff; font-size: .65rem; font-weight: 700; padding: 2px 8px; border-radius: 999px; text-transform: uppercase; letter-spacing: 1px; vertical-align: middle; }
+
+/* DRIVE SUMMARY */
+.drive-summary { margin-top: 26px; display: grid; gap: 18px; }
+.drive-leg-group h3 { font-size: 1rem; color: var(--teal-deep); margin: 0 0 10px; }
+.drive-rows { display: grid; gap: 8px; }
+.drive-row { display: flex; justify-content: space-between; align-items: center; gap: 12px; background: #fff; border-radius: 12px; padding: 12px 16px; box-shadow: 0 6px 18px rgba(14,60,60,.07); border-left: 4px solid var(--coral); }
+.drive-row.back { border-left-color: #1e88e5; }
+.drive-row .dr-route { font-weight: 600; font-size: .92rem; }
+.drive-row .dr-meta { font-size: .85rem; color: #6b7c84; white-space: nowrap; }
+.drive-row a { color: var(--teal-deep); text-decoration: none; font-size: .82rem; font-weight: 600; }
+.drive-total { text-align: center; font-weight: 600; color: var(--teal-deep); }
+
+/* PACKING */
+.pack-progress { display: flex; align-items: center; gap: 14px; justify-content: center; margin-bottom: 28px; flex-wrap: wrap; }
+.pack-bar { width: min(360px, 60vw); height: 12px; background: #e6eef0; border-radius: 999px; overflow: hidden; }
+.pack-bar span { display: block; height: 100%; width: 0; background: linear-gradient(90deg, var(--aqua), var(--sunset)); transition: width .35s; }
+.pack-count { font-weight: 600; color: var(--teal-deep); font-size: .9rem; }
+.btn-sm { padding: 8px 16px; font-size: .85rem; }
+.pack-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 20px; }
+.pack-cat { background: #fff; border-radius: 18px; padding: 20px 22px; box-shadow: var(--shadow); }
+.pack-cat h3 { margin: 0 0 12px; font-size: 1.05rem; }
+.pack-cat label { display: flex; align-items: flex-start; gap: 10px; padding: 6px 0; cursor: pointer; font-size: .92rem; color: #44555c; }
+.pack-cat input { width: 18px; height: 18px; margin-top: 1px; accent-color: var(--teal); cursor: pointer; flex: none; }
+.pack-cat input:checked + span { text-decoration: line-through; color: #aab6bb; }
+
+/* MEMORIES */
+.mem-toolbar { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; margin-bottom: 24px; }
+.mem-select { padding: 12px 16px; border-radius: 999px; border: 1.5px solid var(--teal); background: #fff; color: var(--ink); font-family: inherit; font-size: .95rem; max-width: 70vw; }
+.mem-empty { text-align: center; color: #93a4ab; }
+.mem-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 14px; }
+.mem-card { position: relative; border-radius: 16px; overflow: hidden; box-shadow: var(--shadow); aspect-ratio: 1 / 1; background: #e6eef0; }
+.mem-card img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.mem-card .mem-tag { position: absolute; left: 8px; bottom: 8px; background: rgba(0,0,0,.55); color: #fff; font-size: .72rem; padding: 3px 9px; border-radius: 999px; backdrop-filter: blur(4px); }
+.mem-card .mem-del { position: absolute; top: 8px; right: 8px; background: rgba(0,0,0,.55); color: #fff; border: 0; width: 28px; height: 28px; border-radius: 50%; cursor: pointer; font-size: .9rem; line-height: 1; }
+.mem-card .mem-del:hover { background: var(--coral); }
+
 /* RESPONSIVE */
 @media (max-width: 760px) {
   .nav-links { display: none; position: absolute; top: 100%; right: 16px; flex-direction: column; background: #fff; padding: 16px 22px; border-radius: 16px; box-shadow: var(--shadow); gap: 14px; }
   .nav-links.open { display: flex; }
   .nav-toggle { display: block; }
   .stats { grid-template-columns: repeat(2, 1fr); gap: 18px; }
+  .drive-row { flex-direction: column; align-items: flex-start; gap: 4px; }
 }

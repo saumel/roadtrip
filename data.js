@@ -259,3 +259,76 @@ const TRIP = {
     { start: "2026-07-18", end: "2026-07-19", title: "Home in Québec 🏁", loc: "Québec City" },
   ],
 };
+
+/* Date range [startISO, endISO] for each timeline day (same order as TRIP.days).
+   Used to highlight "today" during the trip. */
+TRIP.dayRanges = [
+  ["2026-06-23", "2026-06-23"], // Québec → DC
+  ["2026-06-24", "2026-06-24"], // DC museums
+  ["2026-06-25", "2026-06-25"], // DC → Charleston
+  ["2026-06-26", "2026-06-26"], // Yorktown → Orlando
+  ["2026-06-26", "2026-07-03"], // Orlando week
+  ["2026-07-03", "2026-07-05"], // Orlando → Miami
+  ["2026-07-05", "2026-07-12"], // Cruise
+  ["2026-07-12", "2026-07-15"], // Miami friends
+  ["2026-07-15", "2026-07-15"], // Depart Miami
+  ["2026-07-16", "2026-07-16"], // Savannah
+  ["2026-07-17", "2026-07-17"], // Philadelphia
+  ["2026-07-18", "2026-07-18"], // Home
+];
+
+/* Packing checklist */
+TRIP.packing = {
+  "📄 Documents": [
+    "Passports (everyone)",
+    "Cruise boarding documents",
+    "Driver's license & car registration",
+    "Travel + health insurance cards",
+    "Hotel & cruise confirmations",
+    "Some US cash + credit cards",
+  ],
+  "👕 Clothing": [
+    "Summer clothes (hot & humid!)",
+    "Swimsuits (x2 each)",
+    "Light rain jacket / poncho",
+    "Comfortable walking shoes",
+    "Sandals / flip-flops",
+    "One nicer outfit for cruise dinners",
+    "Sun hats & caps",
+  ],
+  "🏖️ Beach & Pool": [
+    "Sunscreen (SPF 50+)",
+    "After-sun / aloe",
+    "Beach towels",
+    "Goggles for the kids",
+    "Reusable water bottles",
+  ],
+  "🔌 Electronics": [
+    "Phone chargers & cables",
+    "Car phone mount",
+    "Power bank",
+    "Camera",
+    "Headphones / tablet for kids",
+  ],
+  "🚗 Car & Road": [
+    "First-aid kit",
+    "Snacks & cooler",
+    "Paper map / offline maps downloaded",
+    "Window shades for kids",
+    "Trash bags & wet wipes",
+    "Spare tire & jack checked",
+  ],
+  "🧒 Kids": [
+    "Favorite toys / comfort items",
+    "Travel games & activity books",
+    "Kids' medication",
+    "Extra clothes within reach",
+  ],
+  "🧴 Toiletries & Health": [
+    "Toothbrushes & toiletries",
+    "Bug spray",
+    "Motion-sickness remedy",
+    "Pain reliever & basic meds",
+    "Hand sanitizer",
+  ],
+};

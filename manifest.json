@@ -1,0 +1,25 @@
+{
+  "name": "RoadTrip 2026 — Québec to Miami",
+  "short_name": "RoadTrip 2026",
+  "description": "Our family road trip from Québec to Miami and back, June–July 2026.",
+  "start_url": ".",
+  "scope": ".",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#0e8c8c",
+  "theme_color": "#0e8c8c",
+  "icons": [
+    {
+      "src": "icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "images/family.jpg",
+      "sizes": "512x512",
+      "type": "image/jpeg",
+      "purpose": "any"
+    }
+  ]
+}
