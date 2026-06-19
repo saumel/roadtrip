@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>RoadTrip 2026 · Québec → Miami → Québec</title>
+  <meta name="description" content="A family road trip adventure from Québec to Miami and back, June 23 – July 18, 2026." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <!-- Animated background -->
+  <div class="bg-decor" aria-hidden="true">
+    <span class="palm">🌴</span><span class="palm">🌊</span><span class="palm">☀️</span>
+  </div>
+
+  <!-- NAV -->
+  <header class="nav" id="nav">
+    <a href="#home" class="brand">🚐 RoadTrip<span>2026</span></a>
+    <nav class="nav-links">
+      <a href="#home">Home</a>
+      <a href="#itinerary">Itinerary</a>
+      <a href="#map">Map</a>
+      <a href="#stays">Stays</a>
+      <a href="#calendar">Calendar</a>
+    </nav>
+    <button class="nav-toggle" id="navToggle" aria-label="Menu">☰</button>
+  </header>
+
+  <!-- HERO -->
+  <section class="hero" id="home">
+    <div class="hero-photo" id="heroPhoto"></div>
+    <div class="hero-overlay"></div>
+    <div class="hero-content">
+      <p class="hero-kicker">The Great Family Adventure</p>
+      <h1 class="hero-title">2026 RoadTrip</h1>
+      <p class="hero-dates">June 23 – July 18, 2026 · 26 days · ~6,500 km</p>
+
+      <div class="countdown" id="countdown" aria-live="polite">
+        <div class="cd-box"><span id="cdDays">--</span><small>days</small></div>
+        <div class="cd-box"><span id="cdHours">--</span><small>hrs</small></div>
+        <div class="cd-box"><span id="cdMins">--</span><small>min</small></div>
+        <div class="cd-box"><span id="cdSecs">--</span><small>sec</small></div>
+      </div>
+
+      <div class="hero-actions">
+        <a href="#itinerary" class="btn btn-primary">See the Journey</a>
+        <a href="#map" class="btn btn-ghost">Open the Map</a>
+      </div>
+    </div>
+    <div class="scroll-hint">▾</div>
+  </section>
+
+  <!-- STATS -->
+  <section class="stats">
+    <div class="stat"><strong id="statStops">0</strong><span>Stops</span></div>
+    <div class="stat"><strong>5</strong><span>Travellers</span></div>
+    <div class="stat"><strong>7</strong><span>Cruise nights</span></div>
+    <div class="stat"><strong>4</strong><span>States + DC</span></div>
+  </section>
+
+  <!-- ITINERARY -->
+  <section class="section" id="itinerary">
+    <div class="section-head">
+      <h2>Day by Day</h2>
+      <p>Every stop on our adventure, from the drive south to the journey home.</p>
+    </div>
+    <div class="timeline" id="timeline"></div>
+  </section>
+
+  <!-- MAP -->
+  <section class="section section-map" id="map">
+    <div class="section-head">
+      <h2>The Route</h2>
+      <p>Tap any marker to see details and open it in Google Maps.</p>
+    </div>
+    <div class="map-legend">
+      <label><input type="checkbox" id="toggleGo" checked /><i class="dot go"></i> Heading south (go)</label>
+      <label><input type="checkbox" id="toggleBack" checked /><i class="dot back"></i> Heading home (back)</label>
+    </div>
+    <div id="googleMap" class="map"></div>
+  </section>
+
+  <!-- STAYS -->
+  <section class="section" id="stays">
+    <div class="section-head">
+      <h2>Where We Sleep</h2>
+      <p>Our home base for each leg of the trip.</p>
+    </div>
+    <div class="stay-grid" id="stayGrid"></div>
+  </section>
+
+  <!-- CALENDAR -->
+  <section class="section section-cal" id="calendar">
+    <div class="section-head">
+      <h2>Add to Your Calendar</h2>
+      <p>Download the whole trip as calendar events for Google Calendar, Apple, or Outlook.</p>
+    </div>
+    <div class="cal-actions">
+      <button class="btn btn-primary" id="downloadIcs">⬇️ Download trip.ics</button>
+      <a class="btn btn-ghost" id="gcalLink" target="_blank" rel="noopener">📅 Add first day to Google Calendar</a>
+    </div>
+    <div class="cal-list" id="calList"></div>
+  </section>
+
+  <footer class="footer">
+    <p>Made with ❤️ for the family · RoadTrip 2026</p>
+    <p class="muted">Québec · Washington · Charleston · Orlando · Miami · Savannah · Philadelphia</p>
+  </footer>
+
+  <script src="data.js"></script>
+  <script src="app.js"></script>
+  <!-- Google Maps JavaScript API. Restrict this key to your domains in Google Cloud Console. -->
+  <script async
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCaySybvalnsjxE-Uep2s3LyQmKGF13fOc&callback=initMap&loading=async"></script>
+</body>
+</html>
